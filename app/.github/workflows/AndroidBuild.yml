@@ -1,0 +1,21 @@
+name: Android CI/CD
+
+on:
+  push:
+    branches:
+      - develop
+    tags:
+      - 'build/test/*' # Tag to trigger for debug APK for testing
+      - 'build/release/*' # Tag to trigger for signed APK and AAB
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Say hello
+        run: echo "Hello World"
