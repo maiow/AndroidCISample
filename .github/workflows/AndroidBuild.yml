@@ -10,7 +10,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/CI-sample'
+    if: github.ref == 'refs/heads/develop' || 'refs/heads/CI-sample'
 
     steps:
       - name: Checkout
