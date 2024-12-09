@@ -10,17 +10,62 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    #GitHub Actions don't use AND in on push for tags AND branches, so we specify branches here
     if: github.ref == 'refs/heads/develop' || 'refs/heads/CI-sample'
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
-      - name: Say hello
-        run: echo "Hello Android World"
-
       - name: Setup Java JDK
         uses: actions/setup-java@v4.5.0
         with:
           java-version: '17'
           distribution: 'adopt'
+          cache: gradle
+
+#      - name: Grant execute permission for gradlew
+#        run: chmod +x gradlew
+
+      - name: Build debug APK
+        if: contains(github.ref, 'refs/tags/build/test')
+        run: ./gradlew assemble
+
+      - name: Set Environment Variables for Prod Signing
+        if: contains(github.ref, 'refs/tags/build/release')
+        env:
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo "Setting up environment variables for signing..."
+
+      - name: Check Secrets Retrieval
+        if: contains(github.ref, 'refs/tags/build/release')
+        run: |
+          if [ -z "$STORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ] || [ -z "$KEY_PASSWORD" ]; then
+            echo "Error: Failed to retrieve one or more secrets"
+            exit 1
+          fi
+
+      - name: Build release APK & AAB
+        if: contains(github.ref, 'refs/tags/build/release')
+        run: |
+          ./gradlew assembleProdRelease
+          ./gradlew bundleProdRelease
+
+      - name: Upload a Testing Build Artifact
+        if: contains(github.ref, 'refs/tags/build/test')
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: androidcisample-dev-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+#      - name: Upload Prod Build Artifacts
+#        if: contains(github.ref, 'refs/tags/build/release')
+#        uses: actions/upload-artifact@v4.4.3
+#        with:
+#          name: campus-prod-release
+#          path: |
+#            app/build/outputs/apk/prod/release/app-prod-release.apk
+#            app/build/outputs/apk/prod/release/app-prod-release.aab
