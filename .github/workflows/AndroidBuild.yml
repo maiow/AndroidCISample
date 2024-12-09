@@ -2,8 +2,6 @@ name: Android CI/CD
 
 on:
   push:
-    branches:
-      - develop
     tags:
       - 'build/test/*' # Tag to trigger for debug APK for testing
       - 'build/release/*' # Tag to trigger for signed APK and AAB
@@ -12,10 +10,17 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/task/CI-sample'
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
       - name: Say hello
-        run: echo "Hello Android"
+        run: echo "Hello Android World"
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.5.0
+        with:
+          java-version: '17'
+          distribution: 'adopt'
