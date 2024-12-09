@@ -31,3 +31,11 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+.gradle
+/local.properties
+.DS_Store
+/captures
+*.aab
+.kotlin
+output-metadata.json
