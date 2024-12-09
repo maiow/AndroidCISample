@@ -24,9 +24,6 @@ jobs:
           distribution: 'adopt'
           cache: gradle
 
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x gradlew
-
       - name: Build debug APK
         if: contains(github.ref, 'refs/tags/build/test')
         run: ./gradlew assemble
