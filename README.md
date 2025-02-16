@@ -1,3 +1,4 @@
+![GitHub last commit](https://img.shields.io/github/last-commit/maiow/AndroidCISample?logo=GitHub)
 # AndroidCISample
 Android project' CI/CD script for GitHub Actions.
 
