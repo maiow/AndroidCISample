@@ -131,10 +131,15 @@ jobs:
           echo "::set-output name=versionName::$versionName"
           echo "::set-output name=versionCode::$versionCode"
 
-      - name: Display Version Info
+      - name: Set Message with Version Info
+        id: set_message
         run: |
-          echo "Version Name: ${{ steps.get_version.outputs.versionName }}"
-          echo "Version Code: ${{ steps.get_version.outputs.versionCode }}"
+          MESSAGE_TEST="{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"15982767\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}"
+          echo "::set-output name=message::$MESSAGE_TEST"
+
+      - name: Display Message
+        run: |
+          echo "$MESSAGE_TEST"
 
 #      - name: Get data of the new testing or prod Google Play build
 #        run: |
