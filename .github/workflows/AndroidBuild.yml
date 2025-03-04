@@ -133,8 +133,11 @@ jobs:
 
       - name: Set Message with Version Info
         id: set_message
+#        run: |
+#          messageTest="{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"15982767\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}"
+#          echo "::set-output name=message::$messageTest"
         run: |
-          messageTest="{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"15982767\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}"
+          messageTest='{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования"}}'
           echo "::set-output name=message::$messageTest"
 
       - name: Display Message
