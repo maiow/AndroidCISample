@@ -112,19 +112,15 @@ jobs:
 
       - name: Get data of the new testing or prod Google Play build
         run: |
-          # - export VERSION=$(grep "versionName" ./app/build.gradle)
-          # variables
           - export GRADLE_PATH=./app/build.gradle   # path to the gradle file
           - export GRADLE_FIELD_NAME="versionName"
           - export GRADLE_FIELD_CODE="versionCode"   
-          # logic
           - export VERSION_NAME_TMP=$(grep $GRADLE_FIELD_NAME $GRADLE_PATH | awk '{print $2}')    # get value versionName"4.21.0"
           - export VERSION_NAME=$(echo $VERSION_NAME_TMP | sed -e 's/^"//'  -e 's/"$//')  # remove quotes 4.21.0
           - export VERSION_CODE_TMP=$(grep $GRADLE_FIELD_CODE $GRADLE_PATH | awk '{print $2}')    # get value versionCode"121"
           - export VERSION_CODE=$(echo $VERSION_CODE_TMP | sed -e 's/^"//'  -e 's/"$//')  # remove quotes 121
           - export MESSAGE_TEST="{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! Собрана новая dev версия $VERSION_CODE, $VERSION_NAME андроида для тестирования"}}"
           - export MESSAGE_GP="{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! В трек внутреннего тестирования Google Play выложен новый андроид прод релиз $VERSION_NAME версии $VERSION_CODE"}}"
-          # result
           - echo message_test: $MESSAGE_TEST
           - echo message_gp: $MESSAGE_GP
 
