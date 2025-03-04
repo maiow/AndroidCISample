@@ -126,7 +126,7 @@ jobs:
       - name: Get versionName and versionCode
         id: get_version
         run: |
-          versionName=$(grep "versionName" app/build.gradle.kts | sed "s/.*versionName\s*=\s*'\(.*\)'.*/\1/")
+          versionName=$(grep "versionName" app/build.gradle.kts | sed "s/.*versionName\s*=\s*'\(.*\)'.*/\1/" | tr -d '[:space:])
           versionCode=$(grep "versionCode" app/build.gradle.kts | sed "s/.*versionCode\s*=\s*\([0-9]*\).*/\1/")
           echo "::set-output name=versionName::$versionName"
           echo "::set-output name=versionCode::$versionCode"
