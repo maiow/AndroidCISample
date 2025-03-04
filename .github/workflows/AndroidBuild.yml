@@ -51,15 +51,15 @@ jobs:
 #          # как указано в документации для setup-gradle здесь не срабатывает
 #          cache-read-only: false
 
-      - name: Build dev debug APK for testing
-        if: contains(github.ref, 'refs/tags/build/test')
-#        env:
-#          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-#          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-#          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-#          GPR_TOKEN: ${{ secrets.GPR_TOKEN }}
-#        run: ./gradlew assembleDevDebug
-        run: ./gradlew assemble
+#      - name: Build dev debug APK for testing
+#        if: contains(github.ref, 'refs/tags/build/test')
+##        env:
+##          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+##          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+##          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+##          GPR_TOKEN: ${{ secrets.GPR_TOKEN }}
+##        run: ./gradlew assembleDevDebug
+#        run: ./gradlew assemble
 
 #      - name: Upload a Debug Testing Build Artifact
 #        if: contains(github.ref, 'refs/tags/build/test')
@@ -113,7 +113,7 @@ jobs:
       - name: Expose version name
         uses: michpohl/android-expose-version-name-action@v1.0.0
         with:
-          path: ./app/build.gradle
+          path: app/build.gradle.kts
           expose-version-name: 'true'
           expose-version-code: 'true'
 
