@@ -110,17 +110,50 @@ jobs:
 #          releaseFiles: app/build/outputs/bundle/prodRelease/*.aab
 #          track: internal
 
-      - name: Expose version name
-        uses: michpohl/android-expose-version-name-action@v1.0.0
-        with:
-          path: app/build.gradle.kts
-          expose-version-name: 'true'
-          expose-version-code: 'true'
 
-      - name: Get data of the new testing or prod Google Play build
-        run: echo "MESSAGE_TEST=$("$ANDROID_VERSION_CODE, $ANDROID_VERSION_NAME андроида для тестирования")" >> $GITHUB_ENV
-      - name: Test
-        run: echo $MESSAGE_TEST
+#      - name: Expose version name
+#        uses: michpohl/android-expose-version-name-action@v1.0.0
+#        with:
+#          path: app/build.gradle.kts - не умеет доставать из kts файлов!
+#          expose-version-name: 'true'
+#          expose-version-code: 'true'
+
+#      - name: Get data of the new testing or prod Google Play build
+#        run: echo "MESSAGE_TEST=$("$ANDROID_VERSION_CODE, $ANDROID_VERSION_NAME андроида для тестирования")" >> $GITHUB_ENV
+#      - name: Test
+#        run: echo $MESSAGE_TEST
+
+      - name: Get versionName and versionCode
+        id: get_version
+        run: |
+          versionName=$(grep "versionName" app/build.gradle.kts | sed "s/.*versionName\s*=\s*'\(.*\)'.*/\1/")
+          versionCode=$(grep "versionCode" app/build.gradle.kts | sed "s/.*versionCode\s*=\s*\([0-9]*\).*/\1/")
+          echo "::set-output name=versionName::$versionName"
+          echo "::set-output name=versionCode::$versionCode"
+
+      - name: Display Version Info
+        run: |
+          echo "Version Name: ${{ steps.get_version.outputs.versionName }}"
+          echo "Version Code: ${{ steps.get_version.outputs.versionCode }}"
+
+#      - name: Get data of the new testing or prod Google Play build
+#        run: |
+#          # - export VERSION=$(grep "versionName" ./app/build.gradle)
+#          # variables
+#          - export GRADLE_PATH=./app/build.gradle   # path to the gradle file
+#          - export GRADLE_FIELD_NAME="versionName"
+#          - export GRADLE_FIELD_CODE="versionCode"
+#          # logic
+#          - export VERSION_NAME_TMP=$(grep $GRADLE_FIELD_NAME $GRADLE_PATH | awk '{print $2}')    # get value versionName"4.21.0"
+#          - export VERSION_NAME=$(echo $VERSION_NAME_TMP | sed -e 's/^"//'  -e 's/"$//')  # remove quotes 4.21.0
+#          - export VERSION_CODE_TMP=$(grep $GRADLE_FIELD_CODE $GRADLE_PATH | awk '{print $2}')    # get value versionCode"121"
+#          - export VERSION_CODE=$(echo $VERSION_CODE_TMP | sed -e 's/^"//'  -e 's/"$//')  # remove quotes 121
+#          - export MESSAGE_TEST="{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! Собрана новая dev версия $VERSION_CODE, $VERSION_NAME андроида для тестирования"}}"
+#          - export MESSAGE_GP="{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! В трек внутреннего тестирования Google Play выложен новый андроид прод релиз $VERSION_NAME версии $VERSION_CODE"}}"
+#          # result
+#          - echo message_test: $MESSAGE_TEST
+#          - echo message_gp: $MESSAGE_GP
+
 #        export MESSAGE_TEST="{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! Собрана новая dev версия $ANDROID_VERSION_CODE, $ANDROID_VERSION_NAME андроида для тестирования"}}"
 #          - export MESSAGE_GP="{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! В трек внутреннего тестирования Google Play выложен новый андроид прод релиз $ANDROID_VERSION_NAME версии $ANDROID_VERSION_CODE"}}"
 #          - echo message_test: $MESSAGE_TEST
