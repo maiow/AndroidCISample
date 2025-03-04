@@ -139,7 +139,7 @@ jobs:
 
       - name: Display Message
         run: |
-          echo ${{ steps.set_message.outputs.MESSAGE_TEST }}
+          echo "${{ steps.set_message.outputs.MESSAGE_TEST }}"
 
 #      - name: Get data of the new testing or prod Google Play build
 #        run: |
