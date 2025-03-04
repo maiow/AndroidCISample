@@ -27,9 +27,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
-        with:
-          token: ${{ secrets.MOBILE_TOKEN }}
-          submodules: true
+#        with:
+#          token: ${{ secrets.MOBILE_TOKEN }}
+#          submodules: true
 
       - name: Setup Java JDK 17
         uses: actions/setup-java@v4.5.0
@@ -39,82 +39,101 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-        env:
-          GPR_TOKEN: ${{ secrets.MOBILE_TOKEN }}
-          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        with:
-          # установлено на false, тк все билды на ci запускаются только на указанных выше ветках
-          # и только по тэгам build/test и build/release (см. выше)
-          # условие вида ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/develop' }}
-          # как указано в документации для setup-gradle здесь не срабатывает
-          cache-read-only: false
+#        env:
+#          GPR_TOKEN: ${{ secrets.MOBILE_TOKEN }}
+#          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+#          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+#          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+#        with:
+#          # установлено на false, тк все билды на ci запускаются только на указанных выше ветках
+#          # и только по тэгам build/test и build/release (см. выше)
+#          # условие вида ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/develop' }}
+#          # как указано в документации для setup-gradle здесь не срабатывает
+#          cache-read-only: false
 
       - name: Build dev debug APK for testing
         if: contains(github.ref, 'refs/tags/build/test')
-        env:
-          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          GPR_TOKEN: ${{ secrets.GPR_TOKEN }}
-        run: ./gradlew assembleDevDebug
+#        env:
+#          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+#          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+#          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+#          GPR_TOKEN: ${{ secrets.GPR_TOKEN }}
+#        run: ./gradlew assembleDevDebug
+        run: ./gradlew assemble
 
-      - name: Upload a Debug Testing Build Artifact
-        if: contains(github.ref, 'refs/tags/build/test')
-        uses: actions/upload-artifact@v4.4.3
-        with:
-          name: androidcisample-dev-debug.apk
-          path: app/build/outputs/apk/dev/debug/app-dev-debug.apk
+#      - name: Upload a Debug Testing Build Artifact
+#        if: contains(github.ref, 'refs/tags/build/test')
+#        uses: actions/upload-artifact@v4.4.3
+#        with:
+#          name: androidcisample-dev-debug.apk
+#          path: app/build/outputs/apk/dev/debug/app-dev-debug.apk
+#
+#      - name: Build dev release APK for testing
+#        if: contains(github.ref, 'refs/tags/build/test')
+#        env:
+#          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+#          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+#          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+#          GPR_TOKEN: ${{ secrets.GPR_TOKEN }}
+#        run: ./gradlew assembleDevRelease
+#
+#      - name: Upload a Release Testing Build Artifact
+#        if: contains(github.ref, 'refs/tags/build/test')
+#        uses: actions/upload-artifact@v4.4.3
+#        with:
+#          name: androidcisample-dev-release.apk
+#          path: app/build/outputs/apk/dev/release/app-dev-release.apk
+#
+#      - name: Build prod release AAB
+#        if: contains(github.ref, 'refs/tags/build/release')
+#        env:
+#          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+#          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+#          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+#          GPR_TOKEN: ${{ secrets.GPR_TOKEN }}
+#        run: ./gradlew bundleProdRelease
+#
+#      - name: Upload a Prod Build Artifact
+#        if: contains(github.ref, 'refs/tags/build/release')
+#        uses: actions/upload-artifact@v4.4.3
+#        with:
+#          name: androidcisample-prod-release.aab
+#          path: app/build/outputs/bundle/prodRelease/app-prod-release.aab
+#
+##       можно выделить в отдельную job, для этого нужно разобраться с сквозными ссылками на собранный aab
+#      - name: Upload to Google Play
+#        if: contains(github.ref, 'refs/tags/build/release')
+#        uses: r0adkll/upload-google-play@v1.1.3
+#        with:
+#          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+#          packageName: com.mivanovskaya.androidcisample
+#          releaseFiles: app/build/outputs/bundle/prodRelease/*.aab
+#          track: internal
 
-      - name: Build dev release APK for testing
-        if: contains(github.ref, 'refs/tags/build/test')
-        env:
-          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          GPR_TOKEN: ${{ secrets.GPR_TOKEN }}
-        run: ./gradlew assembleDevRelease
+      - name: Get data of the new testing or prod Google Play build
+        run: |
+          # - export VERSION=$(grep "versionName" ./app/build.gradle)
+          # variables
+          - export GRADLE_PATH=./app/build.gradle   # path to the gradle file
+          - export GRADLE_FIELD_NAME="versionName"
+          - export GRADLE_FIELD_CODE="versionCode"   
+          # logic
+          - export VERSION_NAME_TMP=$(grep $GRADLE_FIELD_NAME $GRADLE_PATH | awk '{print $2}')    # get value versionName"4.21.0"
+          - export VERSION_NAME=$(echo $VERSION_NAME_TMP | sed -e 's/^"//'  -e 's/"$//')  # remove quotes 4.21.0
+          - export VERSION_CODE_TMP=$(grep $GRADLE_FIELD_CODE $GRADLE_PATH | awk '{print $2}')    # get value versionCode"121"
+          - export VERSION_CODE=$(echo $VERSION_CODE_TMP | sed -e 's/^"//'  -e 's/"$//')  # remove quotes 121
+          - export MESSAGE_TEST="{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! Собрана новая dev версия $VERSION_CODE, $VERSION_NAME андроида для тестирования"}}"
+          - export MESSAGE_GP="{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! В трек внутреннего тестирования Google Play выложен новый андроид прод релиз $VERSION_NAME версии $VERSION_CODE"}}"
+          # result
+          - echo message_test: $MESSAGE_TEST
+          - echo message_gp: $MESSAGE_GP
 
-      - name: Upload a Release Testing Build Artifact
-        if: contains(github.ref, 'refs/tags/build/test')
-        uses: actions/upload-artifact@v4.4.3
-        with:
-          name: androidcisample-dev-release.apk
-          path: app/build/outputs/apk/dev/release/app-dev-release.apk
-
-      - name: Build prod release AAB
-        if: contains(github.ref, 'refs/tags/build/release')
-        env:
-          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          GPR_TOKEN: ${{ secrets.GPR_TOKEN }}
-        run: ./gradlew bundleProdRelease
-
-      - name: Upload a Prod Build Artifact
-        if: contains(github.ref, 'refs/tags/build/release')
-        uses: actions/upload-artifact@v4.4.3
-        with:
-          name: androidcisample-prod-release.aab
-          path: app/build/outputs/bundle/prodRelease/app-prod-release.aab
-
-#       можно выделить в отдельную job, для этого нужно разобраться с сквозными ссылками на собранный aab
-      - name: Upload to Google Play
-        if: contains(github.ref, 'refs/tags/build/release')
-        uses: r0adkll/upload-google-play@v1.1.3
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-          packageName: com.mivanovskaya.androidcisample
-          releaseFiles: app/build/outputs/bundle/prodRelease/*.aab
-          track: internal
-
-      - name: Inform team in pachca QA tread
-        if: contains(github.ref, 'refs/tags/build/release')
-        uses: joelwmale/webhook-action@cc1a66f987e1591785273fd6f9d2f7a9d8d7c9cd
-        with:
-          # WEBHOOK_URL - url пачки
-          url: ${{ secrets.WEBHOOK_URL }}
-          # GP_BOT_AUTH - хэдер с токеном бота
-          headers: ${{ secrets.GP_BOT_AUTH }}
-          body: '{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀Всем привет! В трек внутреннего тестирования Google Play выложен новый андроид прод релиз"}}'
+#      - name: Inform team in pachca QA tread
+#        if: contains(github.ref, 'refs/tags/build/release')
+#        uses: joelwmale/webhook-action@cc1a66f987e1591785273fd6f9d2f7a9d8d7c9cd
+#        with:
+#          # WEBHOOK_URL - url пачки
+#          url: ${{ secrets.WEBHOOK_URL }}
+#          # GP_BOT_AUTH - хэдер с токеном бота
+#          headers: ${{ secrets.GP_BOT_AUTH }}
+#          body: '{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀Всем привет! В трек внутреннего тестирования Google Play выложен новый андроид прод релиз"}}'
