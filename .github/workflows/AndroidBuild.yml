@@ -144,8 +144,14 @@ jobs:
 
         # prettier-ignore
         run: |
-          messageTest=''{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования"}}''
+          messageTest='{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования"}}'
           echo "::set-output name=messageTest::$messageTest"
+
+      - name: Set Message with Version Info
+        id: set_var
+        run: |
+          mess='{{ steps.set_message.outputs.messageTest }}'
+          echo "::set-output name=mess::$mess"  
 
 #      - name: Display Message
 #        # prettier-ignore
