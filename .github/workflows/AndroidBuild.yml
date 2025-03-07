@@ -131,14 +131,16 @@ jobs:
           echo "::set-output name=versionName::$versionName"
           echo "::set-output name=versionCode::$versionCode"
 
-#      - name: Set Message with Version Info
-#        id: set_message
-##        run: |
-##          messageTest="{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"15982767\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}"
-##          echo "::set-output name=message::$messageTest"
+      - name: Set Message with Version Info
+        id: set_message
 #        run: |
-#          messageTest='\{"message": \{"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования"\}\}'
-#          echo "::set-output name=messageTest::$messageTest"
+#          messageTest="{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"15982767\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}"
+#          echo "::set-output name=message::$messageTest"
+
+        # prettier-ignore
+        run: |
+          messageTest='{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"15982767\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}'
+          echo "::set-output name=messageTest::$messageTest"
 
 #      - name: Display Message
 #        # prettier-ignore
@@ -177,4 +179,4 @@ jobs:
           # GP_BOT_AUTH - хэдер с токеном бота
           headers: ${{ secrets.GP_BOT_AUTH }}
           # prettier-ignore
-          body: '{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"15982767\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}'
+          body: ${{ steps.set_message.outputs.messageTest }}
