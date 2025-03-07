@@ -140,10 +140,10 @@ jobs:
 #          messageTest='\{"message": \{"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования"\}\}'
 #          echo "::set-output name=messageTest::$messageTest"
 
-      - name: Display Message
-        # prettier-ignore
-        run: |
-          echo '{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"15982767\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}'
+#      - name: Display Message
+#        # prettier-ignore
+#        run: |
+#          echo '{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"15982767\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}'
 
 #      - name: Get data of the new testing or prod Google Play build
 #        run: |
@@ -168,13 +168,13 @@ jobs:
 #          - echo message_test: $MESSAGE_TEST
 #          - echo message_gp: $MESSAGE_GP
 
-#      - name: Inform team in pachca QA tread
-#        if: contains(github.ref, 'refs/tags/build/release')
-#        uses: joelwmale/webhook-action@cc1a66f987e1591785273fd6f9d2f7a9d8d7c9cd
-#        with:
-#          # WEBHOOK_URL - url пачки
-#          url: ${{ secrets.WEBHOOK_URL }}
-#          # GP_BOT_AUTH - хэдер с токеном бота
-#          headers: ${{ secrets.GP_BOT_AUTH }}
-#          # prettier-ignore
-#          body: '{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"15982767\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}'
+      - name: Inform team in pachca QA tread
+        if: contains(github.ref, 'refs/tags/build/release')
+        uses: joelwmale/webhook-action@cc1a66f987e1591785273fd6f9d2f7a9d8d7c9cd
+        with:
+          # WEBHOOK_URL - url пачки
+          url: ${{ secrets.WEBHOOK_URL }}
+          # GP_BOT_AUTH - хэдер с токеном бота
+          headers: ${{ secrets.GP_BOT_AUTH }}
+          # prettier-ignore
+          body: '{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"15982767\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}'
