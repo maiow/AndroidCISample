@@ -178,5 +178,4 @@ jobs:
           url: ${{ secrets.WEBHOOK_URL }}
           # GP_BOT_AUTH - хэдер с токеном бота
           headers: ${{ secrets.GP_BOT_AUTH }}
-          # prettier-ignore
           body: ${{ steps.set_message.outputs.messageTest }}
