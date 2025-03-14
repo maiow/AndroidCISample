@@ -12,8 +12,8 @@ android {
         applicationId = "com.mivanovskaya.androidcisample"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 122
+        versionName = "4.21.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
