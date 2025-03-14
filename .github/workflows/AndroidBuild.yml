@@ -189,7 +189,7 @@ jobs:
           url: ${{ secrets.WEBHOOK_URL }}
           # GP_BOT_AUTH - хэдер с токеном бота
           headers: ${{ secrets.GP_BOT_AUTH }}
-          body: '{ "message": { "entity_type": "discussion", "entity_id": "21144130", "content": "🚀 Всем привет! Собрана новая dev версия 122, versionName="4.21.1" андроида для тестирования" } }'
+          body: '{ "message": { "entity_type": "discussion", "entity_id": "21144130", "content": "🚀 Всем привет! Собрана новая dev версия 122, versionName=4.21.1 андроида для тестирования" } }'
 #          body: '{
 #            "message": {
 #              "entity_type": "discussion",
