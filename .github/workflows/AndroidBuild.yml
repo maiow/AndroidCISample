@@ -126,60 +126,10 @@ jobs:
       - name: Get versionName and versionCode
         id: get_version
         run: |
-          versionName=$(grep "versionName" app/build.gradle.kts | sed "s/.*versionName\\s*=\\s*'\\(.*\\)'.*/\\1/" | tr -d '[:space:]' | sed 's/"/\\"/g')
+          versionName=$(grep "versionName" app/build.gradle.kts | sed "s/.*versionName\\s*=\\s*'\\(.*\\)'.*/\\1/" | tr -d '[:space:]' | sed 's/"//g' | sed 's/versionName=//')
           versionCode=$(grep "versionCode" app/build.gradle.kts | sed "s/.*versionCode\s*=\s*\([0-9]*\).*/\1/")
           echo "::set-output name=versionName::$versionName"
           echo "::set-output name=versionCode::$versionCode"
-
-      - name: Set Message with Version Info
-        id: set_message
-#        run: |
-#          messageTest="{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"21144130\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}"
-#          echo "::set-output name=message::$messageTest"
-
-        # prettier-ignore
-#        run: |
-#          messageTest='{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"21144130\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}'
-#          echo "::set-output name=messageTest::$messageTest"
-
-        # prettier-ignore
-        run: |
-          messageTest='{"message": {"entity_type": "discussion","entity_id": "21144130","content": "🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования"}}'
-          echo "::set-output name=messageTest::$messageTest"
-
-      - name: Set Message with Version Info
-        id: set_var
-        run: |
-          mess='{{ steps.set_message.outputs.messageTest }}'
-          echo "::set-output name=mess::$mess"  
-
-#      - name: Display Message
-#        # prettier-ignore
-#        run: |
-#          echo '{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"21144130\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}'
-
-#      - name: Get data of the new testing or prod Google Play build
-#        run: |
-#          # - export VERSION=$(grep "versionName" ./app/build.gradle)
-#          # variables
-#          - export GRADLE_PATH=./app/build.gradle   # path to the gradle file
-#          - export GRADLE_FIELD_NAME="versionName"
-#          - export GRADLE_FIELD_CODE="versionCode"
-#          # logic
-#          - export VERSION_NAME_TMP=$(grep $GRADLE_FIELD_NAME $GRADLE_PATH | awk '{print $2}')    # get value versionName"4.21.0"
-#          - export VERSION_NAME=$(echo $VERSION_NAME_TMP | sed -e 's/^"//'  -e 's/"$//')  # remove quotes 4.21.0
-#          - export VERSION_CODE_TMP=$(grep $GRADLE_FIELD_CODE $GRADLE_PATH | awk '{print $2}')    # get value versionCode"121"
-#          - export VERSION_CODE=$(echo $VERSION_CODE_TMP | sed -e 's/^"//'  -e 's/"$//')  # remove quotes 121
-#          - export MESSAGE_TEST="{"message": {"entity_type": "discussion","entity_id": "21144130","content": "🚀 Всем привет! Собрана новая dev версия $VERSION_CODE, $VERSION_NAME андроида для тестирования"}}"
-#          - export MESSAGE_GP="{"message": {"entity_type": "discussion","entity_id": "21144130","content": "🚀 Всем привет! В трек внутреннего тестирования Google Play выложен новый андроид прод релиз $VERSION_NAME версии $VERSION_CODE"}}"
-#          # result
-#          - echo message_test: $MESSAGE_TEST
-#          - echo message_gp: $MESSAGE_GP
-
-#        export MESSAGE_TEST="{"message": {"entity_type": "discussion","entity_id": "21144130","content": "🚀 Всем привет! Собрана новая dev версия $ANDROID_VERSION_CODE, $ANDROID_VERSION_NAME андроида для тестирования"}}"
-#          - export MESSAGE_GP="{"message": {"entity_type": "discussion","entity_id": "21144130","content": "🚀 Всем привет! В трек внутреннего тестирования Google Play выложен новый андроид прод релиз $ANDROID_VERSION_NAME версии $ANDROID_VERSION_CODE"}}"
-#          - echo message_test: $MESSAGE_TEST
-#          - echo message_gp: $MESSAGE_GP
 
       - name: Inform team in pachca QA tread
         if: contains(github.ref, 'refs/tags/build/test')
@@ -197,4 +147,3 @@ jobs:
 #              "content": "🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, \"${{ steps.get_version.outputs.versionName }}\" андроида для тестирования"
 #            }
 #          }'
-#          body: ${{ steps.set_message.outputs.messageTest }}
