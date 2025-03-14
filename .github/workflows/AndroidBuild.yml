@@ -156,7 +156,7 @@ jobs:
 #      - name: Display Message
 #        # prettier-ignore
 #        run: |
-#          echo '{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"15982767\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}'
+#          echo '{\"message\": {\"entity_type\": \"discussion\",\"entity_id\": \"21144130\",\"content\": \"🚀 Всем привет! Собрана новая dev версия ${{ steps.get_version.outputs.versionCode }}, ${{ steps.get_version.outputs.versionName }} андроида для тестирования\"}}'
 
 #      - name: Get data of the new testing or prod Google Play build
 #        run: |
@@ -170,23 +170,23 @@ jobs:
 #          - export VERSION_NAME=$(echo $VERSION_NAME_TMP | sed -e 's/^"//'  -e 's/"$//')  # remove quotes 4.21.0
 #          - export VERSION_CODE_TMP=$(grep $GRADLE_FIELD_CODE $GRADLE_PATH | awk '{print $2}')    # get value versionCode"121"
 #          - export VERSION_CODE=$(echo $VERSION_CODE_TMP | sed -e 's/^"//'  -e 's/"$//')  # remove quotes 121
-#          - export MESSAGE_TEST="{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! Собрана новая dev версия $VERSION_CODE, $VERSION_NAME андроида для тестирования"}}"
-#          - export MESSAGE_GP="{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! В трек внутреннего тестирования Google Play выложен новый андроид прод релиз $VERSION_NAME версии $VERSION_CODE"}}"
+#          - export MESSAGE_TEST="{"message": {"entity_type": "discussion","entity_id": "21144130","content": "🚀 Всем привет! Собрана новая dev версия $VERSION_CODE, $VERSION_NAME андроида для тестирования"}}"
+#          - export MESSAGE_GP="{"message": {"entity_type": "discussion","entity_id": "21144130","content": "🚀 Всем привет! В трек внутреннего тестирования Google Play выложен новый андроид прод релиз $VERSION_NAME версии $VERSION_CODE"}}"
 #          # result
 #          - echo message_test: $MESSAGE_TEST
 #          - echo message_gp: $MESSAGE_GP
 
-#        export MESSAGE_TEST="{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! Собрана новая dev версия $ANDROID_VERSION_CODE, $ANDROID_VERSION_NAME андроида для тестирования"}}"
-#          - export MESSAGE_GP="{"message": {"entity_type": "discussion","entity_id": "15982767","content": "🚀 Всем привет! В трек внутреннего тестирования Google Play выложен новый андроид прод релиз $ANDROID_VERSION_NAME версии $ANDROID_VERSION_CODE"}}"
+#        export MESSAGE_TEST="{"message": {"entity_type": "discussion","entity_id": "21144130","content": "🚀 Всем привет! Собрана новая dev версия $ANDROID_VERSION_CODE, $ANDROID_VERSION_NAME андроида для тестирования"}}"
+#          - export MESSAGE_GP="{"message": {"entity_type": "discussion","entity_id": "21144130","content": "🚀 Всем привет! В трек внутреннего тестирования Google Play выложен новый андроид прод релиз $ANDROID_VERSION_NAME версии $ANDROID_VERSION_CODE"}}"
 #          - echo message_test: $MESSAGE_TEST
 #          - echo message_gp: $MESSAGE_GP
 
-#      - name: Inform team in pachca QA tread
-#        if: contains(github.ref, 'refs/tags/build/test')
-#        uses: joelwmale/webhook-action@cc1a66f987e1591785273fd6f9d2f7a9d8d7c9cd
-#        with:
-#          # WEBHOOK_URL - url пачки
-#          url: ${{ secrets.WEBHOOK_URL }}
-#          # GP_BOT_AUTH - хэдер с токеном бота
-#          headers: ${{ secrets.GP_BOT_AUTH }}
-#          body: ${{ steps.set_message.outputs.messageTest }}
+      - name: Inform team in pachca QA tread
+        if: contains(github.ref, 'refs/tags/build/test')
+        uses: joelwmale/webhook-action@cc1a66f987e1591785273fd6f9d2f7a9d8d7c9cd
+        with:
+          # WEBHOOK_URL - url пачки
+          url: ${{ secrets.WEBHOOK_URL }}
+          # GP_BOT_AUTH - хэдер с токеном бота
+          headers: ${{ secrets.GP_BOT_AUTH }}
+          body: ${{ steps.set_message.outputs.messageTest }}
