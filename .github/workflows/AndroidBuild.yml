@@ -147,7 +147,7 @@ jobs:
             "message": {
               "entity_type": "discussion",
               "entity_id": "21144130",
-              "content": "🚀 Всем привет! Собрана новая dev версия андроида $ANDROID_VERSION_CODE, код версии $ANDROID_VERSION_NAME для тестирования 🚀"
+              "content": "🚀 Всем привет! Собрана новая dev версия андроида ${{ env.ANDROID_VERSION_CODE }}, код версии ${{ env.ANDROID_VERSION_NAME }} для тестирования 🚀"
             }
           }'
 
