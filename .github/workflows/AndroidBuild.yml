@@ -126,7 +126,7 @@ jobs:
 #          path: app/build/outputs/apk/dev/release/app-dev-release.apk
 
       - name: Get versionName and versionCode
-        uses: maiow/expose-android-build.gradle.kts-version-code-and-name@v1.0.0
+        uses: maiow/expose-android-version@v1.0.1
 #        id: get_version
 #        run: |
 #          versionName=$(grep "versionName" app/build.gradle.kts | sed "s/.*versionName\\s*=\\s*'\\(.*\\)'.*/\\1/" | tr -d '[:space:]' | sed 's/"//g' | sed 's/versionName=//')
